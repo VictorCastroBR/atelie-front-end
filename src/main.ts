@@ -3,13 +3,11 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 
-// Vuetify core
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-// Ícones (MDI)
 import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
@@ -26,8 +24,8 @@ const vuetify = createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#111827',   // preto/cinza escuro (combina com o botão LOGIN)
-          secondary: '#7C3AED', // roxo (pro "Register Here")
+          primary: '#111827',
+          secondary: '#7C3AED',
           surface: '#FFFFFF',
         },
       },
@@ -37,6 +35,6 @@ const vuetify = createVuetify({
 
 const app = createApp(App)
 app.use(vuetify)
-app.use(createPinia())       // se usar
-app.use(router)              // se usar
+app.use(createPinia())
+app.use(router)
 app.mount('#app')

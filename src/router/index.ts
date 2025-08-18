@@ -1,19 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import LoginView from '@/views/auth/LoginView.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
+import DashboardView from '@/views/admin/DashboardView.vue'
+import ProductsListView from '@/views/admin/ProductsListView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/login', name: 'login', component: LoginView, meta: { public: true } },
     { path: '/', name: 'home', component: LoginView },
-    { path: '/admin', name: 'admin', component: LoginView },
+
+    {
+      path: '/admin',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: 'admin' },
+      children: [
+        { path: '', name: 'admin-dashboard', component: DashboardView },
+        { path: 'produtos', name: 'admin-produtos', component: ProductsListView },
+      ],
+    }
   ],
 })
 
 router.beforeEach((to) => {
   const auth = useAuthStore()
-  if (!to.meta?.public && !auth.isAuthenticated) return { name: 'login' }
+  if (!to.meta?.public && !auth.isAuthenticated)
+    return { name: 'login' }
+
+  if (to.meta?.role && auth.role !== to.meta.role)
+    return { name: 'login' }
 })
 
 export default router

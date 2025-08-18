@@ -9,8 +9,12 @@ const api = axios.create({
 const storage = {
   get access()  { return localStorage.getItem('access_token') },
   set access(v) { v ? localStorage.setItem('access_token', v) : localStorage.removeItem('access_token') },
+  
   get refresh()  { return localStorage.getItem('refresh_token') },
   set refresh(v) { v ? localStorage.setItem('refresh_token', v) : localStorage.removeItem('refresh_token') },
+
+  get role()  { return localStorage.getItem('role') },
+  set role(v) { v ? localStorage.setItem('role', v) : localStorage.removeItem('role') },
 }
 
 let isRefreshing = false

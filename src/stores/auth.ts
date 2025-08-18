@@ -8,9 +8,11 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: storage.refresh as string | null,
     loading: false as boolean,
     error: '' as string,
+    role: storage.role
   }),
   getters: {
     isAuthenticated: (s) => !!s.accessToken,
+    isAdmin: (s) => s.role === 'admin'
   },
   actions: {
     async login(email: string, password: string) {
@@ -20,6 +22,7 @@ export const useAuthStore = defineStore('auth', {
         const res = await doLogin({ email, password })
         this.accessToken = res.access_token
         this.refreshToken = res.refresh_token
+        this.role = res.role
       } catch (e: any) {
         this.error = e?.response?.data?.detail || 'Falha no login'
         throw e
@@ -31,6 +34,7 @@ export const useAuthStore = defineStore('auth', {
       doLogout()
       this.accessToken = null
       this.refreshToken = null
+      this.role = null
     },
   },
 })

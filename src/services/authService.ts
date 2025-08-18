@@ -5,16 +5,19 @@ type LoginResponse = {
   access_token: string
   refresh_token: string
   token_type?: string
+  role: string
 }
 
 export async function login(payload: LoginPayload) {
   const { data } = await api.post<LoginResponse>('/auth/login', payload)
   storage.access = data.access_token
   storage.refresh = data.refresh_token
+  storage.role = data.role
   return data
 }
 
 export function logout() {
   storage.access = null
   storage.refresh = null
+   storage.role = null
 }
