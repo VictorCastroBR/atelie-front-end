@@ -1,8 +1,10 @@
+// src/pages/admin/ProductFormView.vue
+
 <template>
   <v-container class="pa-4" fluid>
     <v-card max-width="600" class="mx-auto pa-6 elevation-1">
       <v-card-title class="text-h6 font-weight-bold mb-4">
-        Novo Produto
+        {{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}
       </v-card-title>
 
       <v-form @submit.prevent="onSubmit" ref="formRef" validate-on="submit lazy">
@@ -41,6 +43,14 @@
           </v-col>
         </v-row>
 
+
+        {{ productId }}
+        <ImageUploader
+          v-if="productId"
+          :product-id="productId"
+          v-model="form.images"
+        />
+
         <v-alert
           v-if="success"
           type="success"
@@ -48,7 +58,7 @@
           border="start"
           variant="tonal"
         >
-          Produto cadastrado com sucesso!
+          {{ isEditMode ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!' }}
         </v-alert>
 
         <v-alert
@@ -68,7 +78,7 @@
           :loading="loading"
           height="45"
         >
-          Cadastrar Produto
+          {{ isEditMode ? 'Atualizar Produto' : 'Cadastrar Produto' }}
         </v-btn>
       </v-form>
     </v-card>
@@ -76,17 +86,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { createProduct } from '@/services/productService'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { createProduct, getProduct, updateProduct } from '@/services/productService'
+import ImageUploader from '@/components/products/ImageUploader.vue'
 
 const router = useRouter()
+const route = useRoute()
+
+const isEditMode = ref(!!route.params.id)
+const productId = ref<string>(isEditMode.value ? (route.params.id as string) : '')
 
 const form = ref({
   name: '',
   description: '',
   price: 0,
   stock: 0,
+  images: [] as { url: string; public_id: string }[],
 })
 
 const loading = ref(false)
@@ -100,7 +116,21 @@ const rules = {
   integer: (v: number) => Number.isInteger(v) || 'Valor deve ser inteiro',
 }
 
-const onSubmit = async () => {
+onMounted(async () => {
+  if (isEditMode.value) {
+    loading.value = true
+    try {
+      const data = await getProduct(productId.value)
+      form.value = { ...data }
+    } catch (err: any) {
+      error.value = err?.response?.data?.detail || 'Erro ao carregar produto'
+    } finally {
+      loading.value = false
+    }
+  }
+})
+
+async function onSubmit() {
   const { valid } = await formRef.value?.validate()
   if (!valid) return
 
@@ -109,11 +139,15 @@ const onSubmit = async () => {
   success.value = false
 
   try {
-    await createProduct(form.value)
+    if (isEditMode.value) {
+      await updateProduct(productId.value, form.value)
+    } else {
+      await createProduct(form.value)
+      form.value = { name: '', description: '', price: 0, stock: 0, images: [] }
+    }
     success.value = true
-    form.value = { name: '', description: '', price: 0, stock: 0 }
   } catch (err: any) {
-    error.value = err?.response?.data?.detail || 'Erro ao cadastrar produto'
+    error.value = err?.response?.data?.detail || 'Erro ao salvar produto'
   } finally {
     loading.value = false
   }

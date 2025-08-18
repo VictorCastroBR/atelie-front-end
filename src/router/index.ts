@@ -4,8 +4,8 @@ import LoginView from '@/views/auth/LoginView.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import DashboardView from '@/views/admin/DashboardView.vue'
 import ListProductsView from '@/views/admin/ListProductsView.vue'
-import CreateProductView from '@/views/admin/CreateProductView.vue'
 import EditProductView from '@/views/admin/EditProductView.vue'
+import ProductFormView from '@/views/admin/ProductFormView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,8 +21,8 @@ const router = createRouter({
         { path: '', name: 'admin-dashboard', component: DashboardView },
         { path: 'produtos', children: [
           { path: '', component: ListProductsView },
-          { path: 'novo', component: CreateProductView },
-          { path: ':id/editar', component: EditProductView }
+          { path: 'novo', component: ProductFormView },
+          { path: ':id/editar', component: ProductFormView }
         ]}
       ],
     }
