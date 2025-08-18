@@ -3,8 +3,9 @@ import { useAuthStore } from '@/stores/auth'
 import LoginView from '@/views/auth/LoginView.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import DashboardView from '@/views/admin/DashboardView.vue'
-import ProductsListView from '@/views/admin/ProductsListView.vue'
-import ProductCreateView from '@/views/admin/ProductCreateView.vue'
+import ListProductsView from '@/views/admin/ListProductsView.vue'
+import CreateProductView from '@/views/admin/CreateProductView.vue'
+import EditProductView from '@/views/admin/EditProductView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,8 +20,9 @@ const router = createRouter({
       children: [
         { path: '', name: 'admin-dashboard', component: DashboardView },
         { path: 'produtos', children: [
-          { path: '', component: ProductsListView },
-          { path: 'novo', component: ProductCreateView }
+          { path: '', component: ListProductsView },
+          { path: 'novo', component: CreateProductView },
+          { path: ':id/editar', component: EditProductView }
         ]}
       ],
     }
