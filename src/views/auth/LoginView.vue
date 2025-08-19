@@ -86,19 +86,17 @@ async function onSubmit() {
   if (!valid?.valid) return
   try {
     await auth.login(email.value, password.value)
-    router.push({ name: 'admin' }) // ajuste a rota pós-login
+    router.push({ name: 'admin-dashboard' })
   } catch {
-    // erro já tratado na store
   }
 }
 
 function goRegister() {
-  router.push({ name: 'register' }) // crie essa rota depois, se quiser
+  router.push({ name: 'register' })
 }
 </script>
 
 <style scoped>
-/* Mobile-first vibe similar ao mock */
 .v-card {
   border: none;
 }

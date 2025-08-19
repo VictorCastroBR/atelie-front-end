@@ -4,15 +4,17 @@ import LoginView from '@/views/auth/LoginView.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import DashboardView from '@/views/admin/DashboardView.vue'
 import ListProductsView from '@/views/admin/ListProductsView.vue'
-import EditProductView from '@/views/admin/EditProductView.vue'
 import ProductFormView from '@/views/admin/ProductFormView.vue'
+import CatalogView from '@/views/CatalogView.vue'
+import ProductDetailsView from '@/views/ProductDetailsView.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import CartView from '@/views/CartView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/login', name: 'login', component: LoginView, meta: { public: true } },
     { path: '/', name: 'home', component: LoginView },
-
     {
       path: '/admin',
       component: AdminLayout,
@@ -25,7 +27,16 @@ const router = createRouter({
           { path: ':id/editar', component: ProductFormView }
         ]}
       ],
-    }
+    },
+    {
+      path: '/catalogo',
+      component: DefaultLayout,
+      children: [
+        { path: '', name: 'catalogo', component: CatalogView },
+        { path: '/catalogo/produto/:id', component: ProductDetailsView },
+        { path: '/carrinho', name: 'carrinho', component: CartView }, 
+      ],
+    },
   ],
 })
 
