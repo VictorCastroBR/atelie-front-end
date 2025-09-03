@@ -9,6 +9,7 @@ import CatalogView from '@/views/CatalogView.vue'
 import ProductDetailsView from '@/views/ProductDetailsView.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import CartView from '@/views/CartView.vue'
+import StoreView from '@/views/admin/StoreView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,6 +22,7 @@ const router = createRouter({
       meta: { requiresAuth: true, role: 'admin' },
       children: [
         { path: '', name: 'admin-dashboard', component: DashboardView },
+        { path: 'store', name: 'admin-store', component: StoreView },
         { path: 'produtos', children: [
           { path: '', component: ListProductsView },
           { path: 'novo', component: ProductFormView },
@@ -30,6 +32,7 @@ const router = createRouter({
     },
     {
       path: '/catalogo',
+      meta: { public: true },
       component: DefaultLayout,
       children: [
         { path: '', name: 'catalogo', component: CatalogView },

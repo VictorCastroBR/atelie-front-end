@@ -58,6 +58,7 @@ const rail = ref(false)
 const items = [
   { title: 'Dashboard', icon: 'mdi-view-dashboard-outline', to: '/admin' },
   { title: 'Produtos', icon: 'mdi-cart-outline', to: '/admin/produtos' },
+  { title: 'Configurações da Loja', icon: 'mdi-cog-outline', to: '/admin/store' },
 ]
 
 function logout() {
