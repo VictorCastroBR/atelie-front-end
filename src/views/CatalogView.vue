@@ -1,11 +1,11 @@
 <template>
   <v-container fluid class="pa-4">
-    <v-card class="mb-6 py-6 px-4 text-center">
+    <v-card v-if="store" class="mb-6 py-6 px-4 text-center">
       <v-avatar size="100" class="mx-auto mb-3">
-        <v-img src="https://img.freepik.com/vetores-gratis/vetor-de-gradiente-de-logotipo-colorido-de-passaro_343694-1365.jpg" alt="Logo da Loja" />
+        <v-img :src="store.img.url" alt="Logo da Loja" />
       </v-avatar>
-      <h2 class="text-h5 font-weight-bold">Loja de Enxovais do Seu José</h2>
-      <div class="text-body-2 mt-1">Rua das Camas, 123 - Centro, Cidade - UF</div>
+      <h2 class="text-h5 font-weight-bold">{{ store.name }}</h2>
+      <div class="text-body-2 mt-1">{{ formatAddress(store.address) }}</div>
     </v-card>
 
     <v-text-field
@@ -60,11 +60,22 @@
 import { ref, onMounted, computed } from 'vue'
 import { listProducts } from '@/services/productService'
 import type { Product } from '@/services/productService'
+import { getStore } from '@/services/storeService'
+
+type Address = {
+  street?: string;
+  number?: number;
+  district?: string;
+  city?: string;
+  state?: string;
+};
+
 
 const products = ref<Product[]>([])
 const loading = ref(false)
 const search = ref('')
 const placeholder = '/placeholder.png'
+const store: any = ref(null)
 
 const filteredProducts = computed(() => {
   if (!search.value) return products.value
@@ -75,10 +86,27 @@ const filteredProducts = computed(() => {
   )
 })
 
+function formatAddress(address: Address): string {
+  if (!address) return '';
+
+  const { street, number, district, city, state } = address;
+
+  const parts: string[] = [];
+
+  if (street) parts.push(street);
+  if (number !== undefined && number !== null) parts.push(`nº ${number}`);
+  if (district) parts.push(`- ${district}`);
+  if (city) parts.push(`- ${city}`);
+  if (state) parts.push(`- ${state}`);
+
+  return parts.join(' ');
+}
+
 onMounted(async () => {
   loading.value = true
   try {
     products.value = await listProducts()
+    store.value = await getStore()
   } catch (err) {
     console.error('Erro ao carregar produtos')
   } finally {
